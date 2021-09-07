@@ -3,10 +3,7 @@
     "prefix": "arexports",
     "description": "AsyncRedux exports",
     "body": [
-      "export '${TM_FILENAME_BASE}_widget.dart';",
       "export '${TM_FILENAME_BASE}_connector.dart';",
-      "export '${TM_FILENAME_BASE}_view_model.dart';",
-      "export '${TM_FILENAME_BASE}_view_model_factory.dart';",
       "$0"
     ]
   },
