@@ -35,6 +35,8 @@ ${reduxImports}
 import '${snakeCaseFeatureName}.dart';
 
 class ${connectorName} extends StatelessWidget {
+  const ${connectorName}({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => StoreConnector<${storeConnectorTypeParameters}>(
         vm: () => ${viewModelFactoryName}(),
