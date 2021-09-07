@@ -6,4 +6,4 @@ export * from "./client-exports.template";
 export * from "./connector.template";
 export * from "./widget.template";
 export * from "./view-model-factory.template";
-export * from "./screen-view-model.template";
+export * from "./view-model.template";

@@ -30,9 +30,15 @@ export function getConnectorTemplate(
     reduxImports += `\nimport '${stateImportPath}';`;
   }
 
+  const featureImports = ["view_model", "view_model_factory", "widget"]
+    .map((item) => `import '${snakeCaseFeatureName}_${item}';`)
+    .join("\n");
+
   return `import 'package:flutter/material.dart';
+
 ${reduxImports}
-import '${snakeCaseFeatureName}.dart';
+
+${featureImports}
 
 class ${connectorName} extends StatelessWidget {
   const ${connectorName}({Key? key}) : super(key: key);
