@@ -172,10 +172,15 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
 
   const widgetSuffix = config.client.widget.suffix();
-  const includeWidgetSuffix = config.client.connector.includeWidgetSuffix();
+  const snakeCaseWidgetSuffix = changeCase
+    .snakeCase(widgetSuffix)
+    .toLowerCase();
 
   const connectorSuffix = config.client.connector.suffix();
-  const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix);
+  const snakeCaseConnectorSuffix = changeCase
+    .snake(connectorSuffix)
+    .toLowerCase();
+
   const connectorIncludeWidgetSuffix =
     config.client.connector.includeWidgetSuffix();
 
@@ -183,8 +188,8 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   const stateImportPath = config.business.state.importPath();
 
   let targetFile = snakeCaseFeatureName;
-  if (includeWidgetSuffix) {
-    targetFile += `_${widgetSuffix}`;
+  if (connectorIncludeWidgetSuffix) {
+    targetFile += `_${snakeCaseWidgetSuffix}`;
   }
   targetFile += "_connector";
   if (snakeCaseConnectorSuffix.length > 0) {
@@ -264,6 +269,10 @@ function createViewModelFactoryTemplate(
     throw Error(`${targetFile} already exists`);
   }
 
+  const widgetSuffix = config.client.widget.suffix();
+  const connectorSuffix = config.client.connector.suffix();
+  const connectorIncludeWidgetSuffix =
+    config.client.connector.includeWidgetSuffix();
   const viewModelFactoryBaseName = config.client.viewModelFactory.baseName();
   const viewModelFactoryImportPath =
     config.client.viewModelFactory.importPath();
@@ -277,6 +286,9 @@ function createViewModelFactoryTemplate(
       targetPath,
       getViewModelFactoryTemplate(
         featureName,
+        widgetSuffix,
+        connectorSuffix,
+        connectorIncludeWidgetSuffix,
         viewModelFactoryBaseName,
         viewModelFactoryImportPath,
         viewModelFactoryIncludeState,
