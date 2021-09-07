@@ -9,7 +9,7 @@ export function getActionTemplate(
   stateName: string,
   stateImport: string
 ): string {
-  const pascalCaseActionName = changeCase.pascalCase(actionName.toLowerCase());
+  const pascalCaseActionName = changeCase.pascal(actionName.toLowerCase());
   const reduxActionName = `${pascalCaseActionName}Action`;
   const actionReduce = getActionTypeReduce(actionType, stateName);
 

@@ -12,9 +12,7 @@ export function getViewModelFactoryTemplate(
   stateName: string,
   stateImportPath: string
 ): string {
-  const pascalCaseFeatureName = changeCase.pascalCase(
-    featureName.toLowerCase()
-  );
+  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
 
   let connectorName = `${pascalCaseFeatureName}`;
   if (connectorIncludeWidgetSuffix) {
@@ -25,8 +23,8 @@ export function getViewModelFactoryTemplate(
   const viewModelName = `${pascalCaseFeatureName}ViewModel`;
   const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
 
-  const snakeCaseConnectorName = changeCase.snakeCase(connectorName);
-  const snakeCaseViewModelName = changeCase.snakeCase(viewModelName);
+  const snakeCaseConnectorName = changeCase.snake(connectorName);
+  const snakeCaseViewModelName = changeCase.snake(viewModelName);
 
   const viewModelFactoryTypeParameters = [
     ...(viewModelFactoryIncludeState ? [stateName] : []),

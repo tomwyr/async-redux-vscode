@@ -31,7 +31,7 @@ export const newAsyncReduxClientFeature = async (uri: Uri) => {
     targetDirectory = uri.fsPath;
   }
 
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   try {
     await generateFeatureCode(featureName, targetDirectory);
     window.showInformationMessage(
@@ -73,7 +73,7 @@ async function generateFeatureCode(
   targetDirectory: string
 ) {
   const generateExports = config.client.generateExports();
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`;
 
   if (!existsSync(featureDirectoryPath)) {
@@ -108,7 +108,7 @@ function createDirectory(targetDirectory: string): Promise<void> {
 }
 
 function createExportsTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   const targetFile = `${snakeCaseFeatureName}.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 
@@ -143,12 +143,10 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createWidgetTemplate(featureName: string, targetDirectory: string) {
-  const pascalCaseFeatureName = changeCase.pascalCase(
-    featureName.toLowerCase()
-  );
+  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
   const widgetSuffix = config.client.widget.suffix();
   const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`;
-  const snakeCaseWidgetName = changeCase.snakeCase(widgetName);
+  const snakeCaseWidgetName = changeCase.snake(widgetName);
 
   const targetFile = `${snakeCaseWidgetName}.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
@@ -169,12 +167,10 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createConnectorTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
 
   const widgetSuffix = config.client.widget.suffix();
-  const snakeCaseWidgetSuffix = changeCase
-    .snakeCase(widgetSuffix)
-    .toLowerCase();
+  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix).toLowerCase();
 
   const connectorSuffix = config.client.connector.suffix();
   const snakeCaseConnectorSuffix = changeCase
@@ -230,7 +226,7 @@ async function createViewModelTemplate(
   featureName: string,
   targetDirectory: string
 ) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   const targetFile = `${snakeCaseFeatureName}_view_model.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 
@@ -261,7 +257,7 @@ function createViewModelFactoryTemplate(
   featureName: string,
   targetDirectory: string
 ) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 
