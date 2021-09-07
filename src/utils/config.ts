@@ -24,6 +24,7 @@ export const config = {
       suffix: getWidgetSuffix,
     },
     connector: {
+      suffix: getConnectorSuffix,
       includeWidgetSuffix: getConnectorIncludeWidgetSuffix,
     },
     viewModel: {
@@ -85,6 +86,13 @@ function getClientGenerateExports(): boolean {
 function getWidgetSuffix(): string {
   return (
     getConfigValue("client.widget.suffix") ?? constants.asyncRedux.widgetSuffix
+  );
+}
+
+function getConnectorSuffix(): string {
+  return (
+    getConfigValue("client.connector.suffix") ??
+    constants.asyncRedux.connectorSuffix
   );
 }
 

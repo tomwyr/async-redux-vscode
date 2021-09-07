@@ -113,6 +113,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
   const targetPath = `${targetDirectory}/${targetFile}`;
 
   const widgetSuffix = config.client.widget.suffix();
+  const connectorSuffix = config.client.connector.suffix();
   const connectorIncludeWidgetSuffix =
     config.client.connector.includeWidgetSuffix();
 
@@ -126,6 +127,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
       getClientExportsTemplate(
         featureName,
         widgetSuffix,
+        connectorSuffix,
         connectorIncludeWidgetSuffix
       ),
       "utf8",
@@ -172,11 +174,23 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   const widgetSuffix = config.client.widget.suffix();
   const includeWidgetSuffix = config.client.connector.includeWidgetSuffix();
 
+  const connectorSuffix = config.client.connector.suffix();
+  const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix);
+  const connectorIncludeWidgetSuffix =
+    config.client.connector.includeWidgetSuffix();
+
+  const stateName = config.business.state.name();
+  const stateImportPath = config.business.state.importPath();
+
   let targetFile = snakeCaseFeatureName;
   if (includeWidgetSuffix) {
     targetFile += `_${widgetSuffix}`;
   }
-  targetFile += `_connector.dart`;
+  targetFile += "_connector";
+  if (snakeCaseConnectorSuffix.length > 0) {
+    targetFile += `_${snakeCaseConnectorSuffix}`;
+  }
+  targetFile += ".dart";
 
   const targetPath = `${targetDirectory}/${targetFile}`;
 
@@ -184,17 +198,13 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
     throw Error(`${targetFile} already exists`);
   }
 
-  const connectorIncludeWidgetSuffix =
-    config.client.connector.includeWidgetSuffix();
-  const stateName = config.business.state.name();
-  const stateImportPath = config.business.state.importPath();
-
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
       targetPath,
       getConnectorTemplate(
         featureName,
         widgetSuffix,
+        connectorSuffix,
         connectorIncludeWidgetSuffix,
         stateName,
         stateImportPath
