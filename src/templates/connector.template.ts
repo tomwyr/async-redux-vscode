@@ -23,7 +23,10 @@ export function getConnectorTemplate(
   const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`;
 
   let reduxImports = `${constants.asyncRedux.importStatement}`;
-  if (stateImportPath != constants.asyncRedux.importPath) {
+  if (
+    stateImportPath.length > 0 &&
+    stateImportPath != constants.asyncRedux.importPath
+  ) {
     reduxImports += `\nimport '${stateImportPath}';`;
   }
 

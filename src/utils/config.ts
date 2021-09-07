@@ -57,10 +57,7 @@ function getStateName(): string {
 }
 
 function getStateImportPath(): string {
-  return (
-    getConfigValue("business.state.importPath") ??
-    constants.asyncRedux.importPath
-  );
+  return getConfigValue("business.state.importPath") ?? "";
 }
 
 function getActionBaseName(): string {

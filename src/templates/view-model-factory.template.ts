@@ -29,6 +29,7 @@ export function getViewModelFactoryTemplate(
   }
   if (
     viewModelFactoryIncludeState &&
+    stateImportPath.length > 0 &&
     stateImportPath != constants.asyncRedux.importPath
   ) {
     reduxImports += `\nimport '${stateImportPath}';`;

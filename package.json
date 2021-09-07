@@ -52,7 +52,7 @@
           "async-redux.business.state.importPath": {
             "type": "string",
             "description": "Import path pointing to state class.",
-            "default": "package:async_redux/async_redux.dart",
+            "default": "",
             "pattern": "^(.+\\.dart)?$",
             "patternErrorMessage": "Value has to be valid Dart file import path"
           },
