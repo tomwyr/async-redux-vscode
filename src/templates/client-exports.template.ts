@@ -6,7 +6,7 @@ export function getClientExportsTemplate(
   connectorSuffix: string,
   connectorIncludeWidgetSuffix: boolean
 ): string {
-  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
   const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix);
   const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix);
 

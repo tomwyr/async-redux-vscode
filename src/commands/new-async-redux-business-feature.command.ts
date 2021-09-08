@@ -29,7 +29,7 @@ export const newAsyncReduxBusinessFeature = async (uri: Uri) => {
     targetDirectory = uri.fsPath
   }
 
-  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
   try {
     await generateFeatureCode(featureName, targetDirectory)
     window.showInformationMessage(
@@ -72,7 +72,7 @@ async function generateFeatureCode(
 ) {
   const generateExports = config.business.generateExports()
 
-  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
   const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`;
   const featureActionsDirectoryPath = `${featureDirectoryPath}/actions`;
   const featureModelsDirectoryPath = `${featureDirectoryPath}/models`;
@@ -112,7 +112,7 @@ function createDirectory(targetDirectory: string): Promise<void> {
 }
 
 function createStateTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
   const targetFile = `${snakeCaseFeatureName}_state.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 
@@ -137,7 +137,7 @@ function createStateTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createExportsTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
   const targetFile = `${snakeCaseFeatureName}.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 

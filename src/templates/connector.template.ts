@@ -9,7 +9,7 @@ export function getConnectorTemplate(
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
+  const pascalCaseFeatureName = changeCase.pascal(featureName);
 
   let connectorName = pascalCaseFeatureName;
   if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix;
@@ -42,7 +42,6 @@ export function getConnectorTemplate(
     .join("\n");
 
   return `import 'package:flutter/material.dart';
-
 ${reduxImports}
 
 ${featureImports}

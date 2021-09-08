@@ -39,7 +39,7 @@ export const newAsyncReduxAction = async (uri: Uri) => {
     targetDirectory = uri.fsPath
   }
 
-  const snakeCaseActionName = changeCase.snake(actionName.toLowerCase());
+  const snakeCaseActionName = changeCase.snake(actionName).toLowerCase();
   try {
     await generateActionCode(actionName, actionType, targetDirectory)
     window.showInformationMessage(
@@ -109,7 +109,7 @@ async function createActionTemplate(
   actionType: ActionType,
   targetDirectory: string,
 ) {
-  const snakeCaseActionName = changeCase.snake(actionName.toLowerCase());
+  const snakeCaseActionName = changeCase.snake(actionName).toLowerCase();
   const targetFile = `${snakeCaseActionName}_action.dart`;
   const targetPath = `${targetDirectory}/${targetFile}`;
 
@@ -152,8 +152,8 @@ async function createActionTemplate(
 }
 
 async function addActionToFeatureExports(
-  actionName: String,
-  actionsDirectoryPath: string,
+  actionName: string,
+  actionsDirectoryPath: string
 ) {
   const featurePathItems = actionsDirectoryPath.split("/").slice(0, -1)
   const featurePath = featurePathItems.join("/")
@@ -162,7 +162,7 @@ async function addActionToFeatureExports(
 
   if (!existsSync(featureExportsPath)) return
 
-  const snakeCaseActionName = changeCase.snake(actionName.toLowerCase());
+  const snakeCaseActionName = changeCase.snake(actionName).toLowerCase();
   const actionExportStatement = `export 'actions/${snakeCaseActionName}_action.dart';`;
 
   addActionToFeatureExportsFile(featureExportsPath, actionExportStatement)
