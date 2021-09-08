@@ -1,1 +1,1 @@
-export const dartFileSelector = { language: "dart", scheme: "file" };
+export const dartFileSelector = { language: "dart", scheme: "file" }

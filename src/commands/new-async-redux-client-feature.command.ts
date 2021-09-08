@@ -1,56 +1,56 @@
-import * as _ from "lodash";
-import * as changeCase from "change-case";
-import * as mkdirp from "mkdirp";
+import * as _ from "lodash"
+import * as changeCase from "change-case"
+import * as mkdirp from "mkdirp"
 
-import { InputBoxOptions, OpenDialogOptions, Uri, window } from "vscode";
-import { existsSync, lstatSync, writeFile } from "fs";
+import { InputBoxOptions, OpenDialogOptions, Uri, window } from "vscode"
+import { existsSync, lstatSync, writeFile } from "fs"
 import {
   getClientExportsTemplate,
   getWidgetTemplate,
   getConnectorTemplate,
   getViewModelTemplate,
   getViewModelFactoryTemplate,
-} from "../templates";
-import { config } from "../utils";
+} from "../templates"
+import { config } from "../utils"
 
 export const newAsyncReduxClientFeature = async (uri: Uri) => {
-  const featureName = await promptForFeatureName();
+  const featureName = await promptForFeatureName()
   if (_.isNil(featureName) || featureName.trim() === "") {
-    window.showErrorMessage("The feature name must not be empty");
-    return;
+    window.showErrorMessage("The feature name must not be empty")
+    return
   }
 
-  let targetDirectory;
+  let targetDirectory
   if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isDirectory()) {
-    targetDirectory = await promptForTargetDirectory();
+    targetDirectory = await promptForTargetDirectory()
     if (_.isNil(targetDirectory)) {
-      window.showErrorMessage("Please select a valid directory");
-      return;
+      window.showErrorMessage("Please select a valid directory")
+      return
     }
   } else {
-    targetDirectory = uri.fsPath;
+    targetDirectory = uri.fsPath
   }
 
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
   try {
-    await generateFeatureCode(featureName, targetDirectory);
+    await generateFeatureCode(featureName, targetDirectory)
     window.showInformationMessage(
-      `Successfully generated ${snakeCaseFeatureName} client feature`
-    );
+      `Successfully generated ${snakeCaseFeatureName} client feature`,
+    )
   } catch (error) {
     window.showErrorMessage(
       `Error:
-        ${error instanceof Error ? error.message : JSON.stringify(error)}`
-    );
+        ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+    )
   }
-};
+}
 
 function promptForFeatureName(): Thenable<string | undefined> {
   const featureNamePromptOptions: InputBoxOptions = {
     prompt: "Feature Name",
     placeHolder: "",
-  };
-  return window.showInputBox(featureNamePromptOptions);
+  }
+  return window.showInputBox(featureNamePromptOptions)
 }
 
 async function promptForTargetDirectory(): Promise<string | undefined> {
@@ -58,26 +58,26 @@ async function promptForTargetDirectory(): Promise<string | undefined> {
     canSelectMany: false,
     openLabel: "Select a folder to create the feature in",
     canSelectFolders: true,
-  };
+  }
 
   return window.showOpenDialog(options).then((uri) => {
     if (_.isNil(uri) || _.isEmpty(uri)) {
-      return undefined;
+      return undefined
     }
-    return uri[0].fsPath;
-  });
+    return uri[0].fsPath
+  })
 }
 
 async function generateFeatureCode(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
 ) {
-  const generateExports = config.client.generateExports();
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
-  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`;
+  const generateExports = config.client.generateExports()
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`
 
   if (!existsSync(featureDirectoryPath)) {
-    await createDirectory(featureDirectoryPath);
+    await createDirectory(featureDirectoryPath)
   }
 
   const generatePromises = [
@@ -85,39 +85,39 @@ async function generateFeatureCode(
     createConnectorTemplate(featureName, featureDirectoryPath),
     createViewModelTemplate(featureName, featureDirectoryPath),
     createViewModelFactoryTemplate(featureName, featureDirectoryPath),
-  ];
+  ]
 
   if (generateExports) {
     generatePromises.push(
-      createExportsTemplate(featureName, featureDirectoryPath)
-    );
+      createExportsTemplate(featureName, featureDirectoryPath),
+    )
   }
 
-  await Promise.all(generatePromises);
+  await Promise.all(generatePromises)
 }
 
 function createDirectory(targetDirectory: string): Promise<void> {
   return new Promise((resolve, reject) => {
     mkdirp(targetDirectory, (error) => {
       if (error) {
-        return reject(error);
+        return reject(error)
       }
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }
 
 function createExportsTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
-  const targetFile = `${snakeCaseFeatureName}.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const targetFile = `${snakeCaseFeatureName}.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
-  const widgetSuffix = config.client.widget.suffix();
+  const widgetSuffix = config.client.widget.suffix()
   const connectorIncludeWidgetSuffix =
-    config.client.connector.includeWidgetSuffix();
+    config.client.connector.includeWidgetSuffix()
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
   return new Promise<void>(async (resolve, reject) => {
@@ -126,68 +126,66 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
       getClientExportsTemplate(
         featureName,
         widgetSuffix,
-        connectorIncludeWidgetSuffix
+        connectorIncludeWidgetSuffix,
       ),
       "utf8",
       (error) => {
         if (error) {
-          reject(error);
-          return;
+          reject(error)
+          return
         }
-        resolve();
-      }
-    );
-  });
+        resolve()
+      },
+    )
+  })
 }
 
 function createWidgetTemplate(featureName: string, targetDirectory: string) {
-  const pascalCaseFeatureName = changeCase.pascalCase(
-    featureName.toLowerCase()
-  );
-  const widgetSuffix = config.client.widget.suffix();
-  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`;
-  const snakeCaseWidgetName = changeCase.snakeCase(widgetName);
+  const pascalCaseFeatureName = changeCase.pascalCase(featureName.toLowerCase())
+  const widgetSuffix = config.client.widget.suffix()
+  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
+  const snakeCaseWidgetName = changeCase.snakeCase(widgetName)
 
-  const targetFile = `${snakeCaseWidgetName}.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const targetFile = `${snakeCaseWidgetName}.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
   return new Promise<void>(async (resolve, reject) => {
     writeFile(targetPath, getWidgetTemplate(widgetName), "utf8", (error) => {
       if (error) {
-        reject(error);
-        return;
+        reject(error)
+        return
       }
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }
 
 function createConnectorTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
 
-  const widgetSuffix = config.client.widget.suffix();
-  const includeWidgetSuffix = config.client.connector.includeWidgetSuffix();
+  const widgetSuffix = config.client.widget.suffix()
+  const includeWidgetSuffix = config.client.connector.includeWidgetSuffix()
 
-  let targetFile = snakeCaseFeatureName;
+  let targetFile = snakeCaseFeatureName
   if (includeWidgetSuffix) {
-    targetFile += `_${widgetSuffix}`;
+    targetFile += `_${widgetSuffix}`
   }
-  targetFile += `_connector.dart`;
+  targetFile += `_connector.dart`
 
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
   const connectorIncludeWidgetSuffix =
-    config.client.connector.includeWidgetSuffix();
-  const stateName = config.business.state.name();
-  const stateImportPath = config.business.state.importPath();
+    config.client.connector.includeWidgetSuffix()
+  const stateName = config.business.state.name()
+  const stateImportPath = config.business.state.importPath()
 
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
@@ -197,34 +195,34 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
         widgetSuffix,
         connectorIncludeWidgetSuffix,
         stateName,
-        stateImportPath
+        stateImportPath,
       ),
       "utf8",
       (error) => {
         if (error) {
-          reject(error);
-          return;
+          reject(error)
+          return
         }
-        resolve();
-      }
-    );
-  });
+        resolve()
+      },
+    )
+  })
 }
 
 async function createViewModelTemplate(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
 ) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
-  const targetFile = `${snakeCaseFeatureName}_view_model.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const targetFile = `${snakeCaseFeatureName}_view_model.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
-  const viewModelBaseName = config.client.viewModel.baseName();
-  const viewModelImportPath = config.client.viewModel.importPath();
+  const viewModelBaseName = config.client.viewModel.baseName()
+  const viewModelImportPath = config.client.viewModel.importPath()
 
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
@@ -233,34 +231,33 @@ async function createViewModelTemplate(
       "utf8",
       (error) => {
         if (error) {
-          reject(error);
-          return;
+          reject(error)
+          return
         }
-        resolve();
-      }
-    );
-  });
+        resolve()
+      },
+    )
+  })
 }
 
 function createViewModelFactoryTemplate(
   featureName: string,
-  targetDirectory: string
+  targetDirectory: string,
 ) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
-  const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
-  const viewModelFactoryBaseName = config.client.viewModelFactory.baseName();
-  const viewModelFactoryImportPath =
-    config.client.viewModelFactory.importPath();
+  const viewModelFactoryBaseName = config.client.viewModelFactory.baseName()
+  const viewModelFactoryImportPath = config.client.viewModelFactory.importPath()
   const viewModelFactoryIncludeState =
-    config.client.viewModelFactory.includeState();
-  const stateName = config.business.state.name();
-  const stateImportPath = config.business.state.importPath();
+    config.client.viewModelFactory.includeState()
+  const stateName = config.business.state.name()
+  const stateImportPath = config.business.state.importPath()
 
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
@@ -271,16 +268,16 @@ function createViewModelFactoryTemplate(
         viewModelFactoryImportPath,
         viewModelFactoryIncludeState,
         stateName,
-        stateImportPath
+        stateImportPath,
       ),
       "utf8",
       (error) => {
         if (error) {
-          reject(error);
-          return;
+          reject(error)
+          return
         }
-        resolve();
-      }
-    );
-  });
+        resolve()
+      },
+    )
+  })
 }

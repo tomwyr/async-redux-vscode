@@ -1,5 +1,5 @@
-import * as changeCase from "change-case";
-import * as constants from "../constants";
+import * as changeCase from "change-case"
+import * as constants from "../constants"
 
 export function getViewModelFactoryTemplate(
   featureName: string,
@@ -7,31 +7,29 @@ export function getViewModelFactoryTemplate(
   viewModelFactoryImportPath: string,
   viewModelFactoryIncludeState: boolean,
   stateName: string,
-  stateImportPath: string
+  stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascalCase(
-    featureName.toLowerCase()
-  );
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase());
+  const pascalCaseFeatureName = changeCase.pascalCase(featureName.toLowerCase())
+  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
 
-  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
-  const viewModelName = `${pascalCaseFeatureName}ViewModel`;
-  const connectorName = `${pascalCaseFeatureName}Connector`;
+  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`
+  const connectorName = `${pascalCaseFeatureName}Connector`
 
   const viewModelFactoryTypeParameters = [
     ...(viewModelFactoryIncludeState ? [stateName] : []),
     connectorName,
-  ].join(`, `);
+  ].join(`, `)
 
-  let reduxImports = `${constants.asyncRedux.importStatement}`;
+  let reduxImports = `${constants.asyncRedux.importStatement}`
   if (viewModelFactoryImportPath != constants.asyncRedux.importPath) {
-    reduxImports += `\nimport '${viewModelFactoryImportPath}';`;
+    reduxImports += `\nimport '${viewModelFactoryImportPath}';`
   }
   if (
     viewModelFactoryIncludeState &&
     stateImportPath != constants.asyncRedux.importPath
   ) {
-    reduxImports += `\nimport '${stateImportPath}';`;
+    reduxImports += `\nimport '${stateImportPath}';`
   }
 
   return `${reduxImports}
@@ -41,5 +39,5 @@ class ${viewModelFactoryName} extends ${viewModelFactoryBaseName}<${viewModelFac
   @override
   Vm fromStore() => ${viewModelName}();
 }
-`;
+`
 }

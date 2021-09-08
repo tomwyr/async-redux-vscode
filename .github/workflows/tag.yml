@@ -2,7 +2,7 @@ name: tag
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -18,11 +18,11 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 
       - name: "Bump package version and create tag"
-        uses:  'phips28/gh-action-bump-version@master'
+        uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
-          major-wording:  'major'
-          minor-wording:  'minor'
-          tag-prefix:  'v'
-          commit-message: 'CI: bumps version to {{version}}'
+          major-wording: "major"
+          minor-wording: "minor"
+          tag-prefix: "v"
+          commit-message: "CI: bumps version to {{version}}"

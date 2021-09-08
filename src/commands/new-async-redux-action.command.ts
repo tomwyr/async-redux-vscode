@@ -1,9 +1,9 @@
-import * as changeCase from "change-case";
-import { existsSync, lstatSync, writeFile } from "fs";
-import * as _ from "lodash";
-import { InputBoxOptions, OpenDialogOptions, Uri, window } from "vscode";
-import * as constants from "../constants";
-import { getActionTemplate } from "../templates";
+import * as changeCase from "change-case"
+import { existsSync, lstatSync, writeFile } from "fs"
+import * as _ from "lodash"
+import { InputBoxOptions, OpenDialogOptions, Uri, window } from "vscode"
+import * as constants from "../constants"
+import { getActionTemplate } from "../templates"
 import {
   ActionType,
   asyncPickItem,
@@ -13,59 +13,59 @@ import {
   showActionTypePicker,
   syncPickItem,
   writeFileData,
-} from "../utils";
+} from "../utils"
 
 export const newAsyncReduxAction = async (uri: Uri) => {
-  const actionName = await promptForActionName();
+  const actionName = await promptForActionName()
   if (_.isNil(actionName) || actionName.trim() === "") {
-    window.showErrorMessage("The action name must not be empty");
-    return;
+    window.showErrorMessage("The action name must not be empty")
+    return
   }
 
-  const actionType = await promptForActionType();
+  const actionType = await promptForActionType()
   if (_.isNil(actionType) || actionName.trim() === "") {
-    window.showErrorMessage("The action type must be selected");
-    return;
+    window.showErrorMessage("The action type must be selected")
+    return
   }
 
-  let targetDirectory;
+  let targetDirectory
   if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isDirectory()) {
-    targetDirectory = await promptForTargetDirectory();
+    targetDirectory = await promptForTargetDirectory()
     if (_.isNil(targetDirectory)) {
-      window.showErrorMessage("Please select a valid directory");
-      return;
+      window.showErrorMessage("Please select a valid directory")
+      return
     }
   } else {
-    targetDirectory = uri.fsPath;
+    targetDirectory = uri.fsPath
   }
 
-  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase());
+  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase())
   try {
-    await generateActionCode(actionName, actionType, targetDirectory);
+    await generateActionCode(actionName, actionType, targetDirectory)
     window.showInformationMessage(
-      `Successfully Generated ${snakeCaseActionName} action`
-    );
+      `Successfully Generated ${snakeCaseActionName} action`,
+    )
   } catch (error) {
     window.showErrorMessage(
       `Error:
-        ${error instanceof Error ? error.message : JSON.stringify(error)}`
-    );
+        ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+    )
   }
-};
+}
 
 function promptForActionName(): Thenable<string | undefined> {
   const actionNamePromptOptions: InputBoxOptions = {
     prompt: "Action Name",
     placeHolder: "",
-  };
-  return window.showInputBox(actionNamePromptOptions);
+  }
+  return window.showInputBox(actionNamePromptOptions)
 }
 
 async function promptForActionType(): Promise<ActionType | undefined> {
-  const item = await showActionTypePicker();
+  const item = await showActionTypePicker()
 
-  if (item == syncPickItem) return ActionType.sync;
-  if (item == asyncPickItem) return ActionType.async;
+  if (item == syncPickItem) return ActionType.sync
+  if (item == asyncPickItem) return ActionType.async
 }
 
 async function promptForTargetDirectory(): Promise<string | undefined> {
@@ -73,59 +73,59 @@ async function promptForTargetDirectory(): Promise<string | undefined> {
     canSelectMany: false,
     openLabel: "Select a folder to create the action in",
     canSelectFolders: true,
-  };
+  }
 
   return window.showOpenDialog(options).then((uri) => {
     if (_.isNil(uri) || _.isEmpty(uri)) {
-      return undefined;
+      return undefined
     }
-    return uri[0].fsPath;
-  });
+    return uri[0].fsPath
+  })
 }
 
 async function generateActionCode(
   actionName: string,
   actionType: ActionType,
-  targetDirectory: string
+  targetDirectory: string,
 ): Promise<void> {
-  const actionsDirectoryPath = getActionsDirectoryPath(targetDirectory);
+  const actionsDirectoryPath = getActionsDirectoryPath(targetDirectory)
 
-  await createActionTemplate(actionName, actionType, actionsDirectoryPath);
+  await createActionTemplate(actionName, actionType, actionsDirectoryPath)
 
-  addActionToFeatureExports(actionName, actionsDirectoryPath);
+  addActionToFeatureExports(actionName, actionsDirectoryPath)
 }
 
 function getActionsDirectoryPath(targetDirectory: string): string {
-  const actionsDirectoryName = constants.asyncRedux.actionsDirectory;
-  const actionsDirectoryPath = `${targetDirectory}/${actionsDirectoryName}`;
+  const actionsDirectoryName = constants.asyncRedux.actionsDirectory
+  const actionsDirectoryPath = `${targetDirectory}/${actionsDirectoryName}`
 
   return existsSync(actionsDirectoryPath)
     ? actionsDirectoryPath
-    : targetDirectory;
+    : targetDirectory
 }
 
 async function createActionTemplate(
   actionName: string,
   actionType: ActionType,
-  targetDirectory: string
+  targetDirectory: string,
 ) {
-  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase());
-  const targetFile = `${snakeCaseActionName}_action.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase())
+  const targetFile = `${snakeCaseActionName}_action.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
-  const stateName = config.business.state.name();
-  const stateImportPath = config.business.state.importPath();
-  const actionIncludeState = config.business.action.includeState();
-  const actionImportPath = config.business.action.importPath();
+  const stateName = config.business.state.name()
+  const stateImportPath = config.business.state.importPath()
+  const actionIncludeState = config.business.action.includeState()
+  const actionImportPath = config.business.action.importPath()
 
-  let actionBaseName = config.business.action.baseName();
-  if (actionIncludeState) actionBaseName += `<${stateName}>`;
+  let actionBaseName = config.business.action.baseName()
+  if (actionIncludeState) actionBaseName += `<${stateName}>`
 
-  const actionImport = `import '${actionImportPath}';`;
-  const stateImport = `import '${stateImportPath}';`;
+  const actionImport = `import '${actionImportPath}';`
+  const stateImport = `import '${stateImportPath}';`
 
   if (existsSync(targetPath)) {
-    throw Error(`${targetFile} already exists`);
+    throw Error(`${targetFile} already exists`)
   }
 
   return new Promise<void>(async (resolve, reject) => {
@@ -137,49 +137,49 @@ async function createActionTemplate(
         actionImport,
         actionType,
         stateName,
-        stateImport
+        stateImport,
       ),
       "utf8",
       (error) => {
         if (error) {
-          reject(error);
-          return;
+          reject(error)
+          return
         }
-        resolve();
-      }
-    );
-  });
+        resolve()
+      },
+    )
+  })
 }
 
 async function addActionToFeatureExports(
   actionName: String,
-  actionsDirectoryPath: string
+  actionsDirectoryPath: string,
 ) {
-  const featurePathItems = actionsDirectoryPath.split("/").slice(0, -1);
-  const featurePath = featurePathItems.join("/");
-  const featureName = featurePathItems[featurePathItems.length - 1];
-  const featureExportsPath = `${featurePath}/${featureName}.dart`;
+  const featurePathItems = actionsDirectoryPath.split("/").slice(0, -1)
+  const featurePath = featurePathItems.join("/")
+  const featureName = featurePathItems[featurePathItems.length - 1]
+  const featureExportsPath = `${featurePath}/${featureName}.dart`
 
-  if (!existsSync(featureExportsPath)) return;
+  if (!existsSync(featureExportsPath)) return
 
-  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase());
-  const actionExportStatement = `export 'actions/${snakeCaseActionName}_action.dart';`;
+  const snakeCaseActionName = changeCase.snakeCase(actionName.toLowerCase())
+  const actionExportStatement = `export 'actions/${snakeCaseActionName}_action.dart';`
 
-  addActionToFeatureExportsFile(featureExportsPath, actionExportStatement);
+  addActionToFeatureExportsFile(featureExportsPath, actionExportStatement)
 }
 
 async function addActionToFeatureExportsFile(
   featureExportsPath: string,
-  actionExportStatement: string
+  actionExportStatement: string,
 ) {
-  const file = await readFileData(featureExportsPath);
-  const rows = file.toString().split("\n");
+  const file = await readFileData(featureExportsPath)
+  const rows = file.toString().split("\n")
 
   const preceedingActionExportIndex = getLastIndexWhere(
     rows,
-    (item) => item.startsWith("export") && item < actionExportStatement
-  );
-  rows.splice(preceedingActionExportIndex + 1, 0, actionExportStatement);
+    (item) => item.startsWith("export") && item < actionExportStatement,
+  )
+  rows.splice(preceedingActionExportIndex + 1, 0, actionExportStatement)
 
-  await writeFileData(featureExportsPath, rows.join("\n"));
+  await writeFileData(featureExportsPath, rows.join("\n"))
 }
