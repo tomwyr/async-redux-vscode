@@ -12,7 +12,7 @@ export function getViewModelFactoryTemplate(
   stateName: string,
   stateImportPath: string
 ): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
+  const pascalCaseFeatureName = changeCase.pascal(featureName);
 
   let connectorName = `${pascalCaseFeatureName}`;
   if (connectorIncludeWidgetSuffix) {

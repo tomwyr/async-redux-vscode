@@ -1,7 +1,7 @@
 import * as changeCase from "change-case";
 
 export function getDefaultStateTemplate(featureName: string): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
+  const pascalCaseFeatureName = changeCase.pascal(featureName);
   const featureStateName = `${pascalCaseFeatureName}State`;
 
   return `class ${featureStateName} {

@@ -5,7 +5,7 @@ export function getViewModelTemplate(
   viewModelBaseName: string,
   viewModelImportPath: string
 ): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
+  const pascalCaseFeatureName = changeCase.pascal(featureName);
   const viewModelName = `${pascalCaseFeatureName}ViewModel`;
 
   return `import '${viewModelImportPath}';
