@@ -148,6 +148,9 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
   const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
   const snakeCaseWidgetName = changeCase.snake(widgetName)
 
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`
+  const injectViewModel = config.client.injectViewModel()
+
   const targetFile = `${snakeCaseWidgetName}.dart`
   const targetPath = `${targetDirectory}/${targetFile}`
 
@@ -156,13 +159,18 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
   }
 
   return new Promise<void>(async (resolve, reject) => {
-    writeFile(targetPath, getWidgetTemplate(widgetName), "utf8", (error) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve()
-    })
+    writeFile(
+      targetPath,
+      getWidgetTemplate(widgetName, viewModelName, injectViewModel),
+      "utf8",
+      (error) => {
+        if (error) {
+          reject(error)
+          return
+        }
+        resolve()
+      },
+    )
   })
 }
 
@@ -171,6 +179,8 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
 
   const widgetSuffix = config.client.widget.suffix()
   const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix).toLowerCase()
+
+  const injectViewModel = config.client.injectViewModel()
 
   const connectorSuffix = config.client.connector.suffix()
   const snakeCaseConnectorSuffix = changeCase
@@ -205,6 +215,7 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
       getConnectorTemplate(
         featureName,
         widgetSuffix,
+        injectViewModel,
         connectorSuffix,
         connectorIncludeWidgetSuffix,
         stateName,

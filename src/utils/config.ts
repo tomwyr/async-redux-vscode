@@ -20,6 +20,7 @@ export const config = {
   },
   client: {
     generateExports: getClientGenerateExports,
+    injectViewModel: getInjectViewModel,
     widget: {
       suffix: getWidgetSuffix,
     },
@@ -79,6 +80,10 @@ function getActionIncludeState(): boolean {
 
 function getClientGenerateExports(): boolean {
   return getConfigValue("client.generateExports") ?? true
+}
+
+function getInjectViewModel(): boolean {
+  return getConfigValue("client.injectViewModel") ?? false
 }
 
 function getWidgetSuffix(): string {

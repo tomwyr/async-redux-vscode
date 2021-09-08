@@ -85,6 +85,11 @@
             "description": "Whether to generate exports of widget, connector, view model and view model factory.",
             "default": true
           },
+          "async-redux.client.injectViewModel": {
+            "type": "boolean",
+            "description": "Whether to make connector inject view model to widget as a single object.",
+            "default": false
+          },
           "async-redux.client.widget.suffix": {
             "type": "string",
             "default": "Widget",

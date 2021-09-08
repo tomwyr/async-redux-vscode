@@ -4,6 +4,7 @@ import * as constants from "../constants"
 export function getConnectorTemplate(
   featureName: string,
   widgetSuffix: string,
+  injectViewModel: boolean,
   connectorSuffix: string,
   connectorIncludeWidgetSuffix: boolean,
   stateName: string,
@@ -16,6 +17,8 @@ export function getConnectorTemplate(
   connectorName += `Connector${connectorSuffix}`
 
   const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
+  const widgetArguments = injectViewModel ? "viewModel: viewModel" : ""
+
   const viewModelName = `${pascalCaseFeatureName}ViewModel`
   const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
 
@@ -52,7 +55,7 @@ class ${connectorName} extends StatelessWidget {
   @override
   Widget build(BuildContext context) => StoreConnector<${storeConnectorTypeParameters}>(
         vm: () => ${viewModelFactoryName}(),
-        builder: (context, viewModel) => ${widgetName}(),
+        builder: (context, viewModel) => ${widgetName}(${widgetArguments}),
       );
 }
 `
