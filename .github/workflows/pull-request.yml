@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v2
-        ref: ${{ github.head_ref }}
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: "Setup Node"
         uses: actions/setup-node@v2
