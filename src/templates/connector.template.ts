@@ -20,9 +20,12 @@ export function getConnectorTemplate(
   const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
   const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`
 
-  let reduxImports = `${constants.asyncRedux.importStatement}`
-  if (stateImportPath != constants.asyncRedux.importPath) {
-    reduxImports += `\nimport '${stateImportPath}';`
+  let reduxImports = `${constants.asyncRedux.importStatement}`;
+  if (
+    stateImportPath.length > 0 &&
+    stateImportPath != constants.asyncRedux.importPath
+  ) {
+    reduxImports += `\nimport '${stateImportPath}';`;
   }
 
   return `import 'package:flutter/material.dart';
