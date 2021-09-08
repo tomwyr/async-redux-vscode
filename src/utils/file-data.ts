@@ -9,9 +9,8 @@ export async function readFileData(path: string): Promise<Buffer> {
 }
 
 export async function writeFileData(path: string, data: string) {
-  
   return new Promise<void>((resolve, reject) => {
-    writeFile(path, data, (error) => {
+    xwriteFile(path, data, (error) => {
       error != null ? reject(error) : resolve()
     })
   })
