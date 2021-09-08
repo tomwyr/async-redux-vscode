@@ -33,8 +33,11 @@ export function getViewModelFactoryTemplate(
     reduxImports += `\nimport '${stateImportPath}';`
   }
 
+  const viewModelFactoryImport = `import '${snakeCaseFeatureName}_view_model_factory.dart';`;
+
   return `${reduxImports}
-import '${snakeCaseFeatureName}.dart';
+
+${viewModelFactoryImport}
   
 class ${viewModelFactoryName} extends ${viewModelFactoryBaseName}<${viewModelFactoryTypeParameters}> {
   @override
