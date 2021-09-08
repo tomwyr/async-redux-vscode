@@ -29,7 +29,7 @@ export const newAsyncReduxBusinessFeature = async (uri: Uri) => {
     targetDirectory = uri.fsPath
   }
 
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
   try {
     await generateFeatureCode(featureName, targetDirectory)
     window.showInformationMessage(
@@ -72,10 +72,10 @@ async function generateFeatureCode(
 ) {
   const generateExports = config.business.generateExports()
 
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
-  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`
-  const featureActionsDirectoryPath = `${featureDirectoryPath}/actions`
-  const featureModelsDirectoryPath = `${featureDirectoryPath}/models`
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`;
+  const featureActionsDirectoryPath = `${featureDirectoryPath}/actions`;
+  const featureModelsDirectoryPath = `${featureDirectoryPath}/models`;
 
   if (!existsSync(featureDirectoryPath)) {
     await createDirectory(featureDirectoryPath)
@@ -112,9 +112,9 @@ function createDirectory(targetDirectory: string): Promise<void> {
 }
 
 function createStateTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
-  const targetFile = `${snakeCaseFeatureName}_state.dart`
-  const targetPath = `${targetDirectory}/${targetFile}`
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const targetFile = `${snakeCaseFeatureName}_state.dart`;
+  const targetPath = `${targetDirectory}/${targetFile}`;
 
   const generateFreezed = config.business.state.generateFreezed()
   const getStateTemplate = generateFreezed
@@ -137,9 +137,9 @@ function createStateTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createExportsTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
-  const targetFile = `${snakeCaseFeatureName}.dart`
-  const targetPath = `${targetDirectory}/${targetFile}`
+  const snakeCaseFeatureName = changeCase.snake(featureName.toLowerCase());
+  const targetFile = `${snakeCaseFeatureName}.dart`;
+  const targetPath = `${targetDirectory}/${targetFile}`;
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)

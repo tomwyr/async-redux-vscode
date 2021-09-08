@@ -9,9 +9,7 @@ export function getConnectorTemplate(
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascalCase(
-    featureName.toLowerCase()
-  );
+  const pascalCaseFeatureName = changeCase.pascal(featureName.toLowerCase());
 
   let connectorName = pascalCaseFeatureName;
   if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix;
@@ -21,10 +19,9 @@ export function getConnectorTemplate(
   const viewModelName = `${pascalCaseFeatureName}ViewModel`;
   const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
 
-  const snakeCaseWidgetName = changeCase.snakeCase(widgetName);
-  const snakeCaseViewModelName = changeCase.snakeCase(viewModelName);
-  const snakeCaseViewModelFactoryName =
-    changeCase.snakeCase(viewModelFactoryName);
+  const snakeCaseWidgetName = changeCase.snake(widgetName);
+  const snakeCaseViewModelName = changeCase.snake(viewModelName);
+  const snakeCaseViewModelFactoryName = changeCase.snake(viewModelFactoryName);
 
   const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`;
 
