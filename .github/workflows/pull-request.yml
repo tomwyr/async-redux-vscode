@@ -25,10 +25,7 @@ jobs:
           npm install -g vsce
 
       - name: "Check code formatting"
-        uses: creyD/prettier_action@v4.0
-        with:
-          dry: true
-          prettier_options: --config .prettierrc.yaml --check .
+        run: npx prettier --check .
 
       - name: "Package extension"
         run: vsce package --out async-redux.vsix
