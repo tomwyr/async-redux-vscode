@@ -85,7 +85,7 @@ function getClientGenerateExports(): boolean {
 
 function getWidgetSuffix(): string {
   return (
-    getConfigValue("client.widget.suffix") ?? constants.asyncRedux.widgetSuffix
+    getxConfigValue("client.widget.suffix") ?? constants.asyncRedux.widgetSuffix
   )
 }
 
