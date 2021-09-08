@@ -39,7 +39,7 @@
           },
           "async-redux.business.generateExports": {
             "type": "boolean",
-            "description": "Whether to generate exports of actions and state.",
+            "description": "Whether to export state in a barrel file.",
             "default": true
           },
           "async-redux.business.state.name": {
@@ -80,9 +80,14 @@
             "description": "Whether to include state in action type parameters.",
             "default": true
           },
+          "async-redux.business.action.addToExports": {
+            "type": "boolean",
+            "description": "Whether to add new action export to barrel file (if exists).",
+            "default": true
+          },
           "async-redux.client.generateExports": {
             "type": "boolean",
-            "description": "Whether to generate exports of widget, connector, view model and view model factory.",
+            "description": "Whether to export connector in a barrel file.",
             "default": true
           },
           "async-redux.client.widget.suffix": {

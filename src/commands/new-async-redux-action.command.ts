@@ -92,7 +92,10 @@ async function generateActionCode(
 
   await createActionTemplate(actionName, actionType, actionsDirectoryPath)
 
-  addActionToFeatureExports(actionName, actionsDirectoryPath)
+  const addToExports = config.business.action.addToExports()
+  if (addToExports) {
+    addActionToFeatureExports(actionName, actionsDirectoryPath)
+  }
 }
 
 function getActionsDirectoryPath(targetDirectory: string): string {
