@@ -10,6 +10,7 @@ import * as constants from "./constants";
 import { SnippetCompletionItemProvider } from "./providers/snippet_completion_item_provider";
 
 export function activate(context: ExtensionContext) {
+  
   context.subscriptions.push(
     languages.registerCompletionItemProvider(
       constants.vscode.dartFileSelector,
