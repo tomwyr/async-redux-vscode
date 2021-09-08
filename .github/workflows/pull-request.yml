@@ -1,0 +1,31 @@
+name: pull-request
+
+on:
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v2
+      
+      - name: "Setup Node"
+        uses: actions/setup-node@v2
+        
+      - name: "Install dependencies"
+        run: |
+          npm install
+          npm install -g vsce
+
+      - name: "Check code formatting"
+        run: npx prettier --check .
+
+      - name: "Package extension"
+        run: vsce package --out async-redux.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
