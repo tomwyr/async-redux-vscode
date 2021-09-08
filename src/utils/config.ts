@@ -56,7 +56,7 @@ function getStateName(): string {
 }
 
 function getStateImportPath(): string {
-  return getConfigValue("business.state.importPath") ?? "";
+  return getConfigValue("business.state.importPath") ?? ""
 }
 
 function getActionBaseName(): string {
@@ -91,7 +91,7 @@ function getConnectorSuffix(): string {
   return (
     getConfigValue("client.connector.suffix") ??
     constants.asyncRedux.connectorSuffix
-  );
+  )
 }
 
 function getViewModelBaseName(): string {

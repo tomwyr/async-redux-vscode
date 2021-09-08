@@ -2,10 +2,7 @@
   "AsyncRedux exports": {
     "prefix": "arexports",
     "description": "AsyncRedux exports",
-    "body": [
-      "export '${TM_FILENAME_BASE}_connector_widget.dart';",
-      "$0"
-    ]
+    "body": ["export '${TM_FILENAME_BASE}_connector_widget.dart';", "$0"]
   },
   "AsyncRedux widget": {
     "prefix": "arwidget",

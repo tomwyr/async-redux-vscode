@@ -1,6 +1,6 @@
-import * as changeCase from "change-case";
-import { ActionType } from "../utils";
-import { distinct } from "../utils";
+import * as changeCase from "change-case"
+import { ActionType } from "../utils"
+import { distinct } from "../utils"
 
 export function getActionTemplate(
   actionName: string,
@@ -10,11 +10,11 @@ export function getActionTemplate(
   stateName: string,
   stateImport: string,
 ): string {
-  const pascalCaseActionName = changeCase.pascal(actionName);
-  const reduxActionName = `${pascalCaseActionName}Action`;
-  const actionReduce = getActionTypeReduce(actionType, stateName);
+  const pascalCaseActionName = changeCase.pascal(actionName)
+  const reduxActionName = `${pascalCaseActionName}Action`
+  const actionReduce = getActionTypeReduce(actionType, stateName)
 
-  const imports = [actionImport, stateImport].filter(distinct).join("\n");
+  const imports = [actionImport, stateImport].filter(distinct).join("\n")
 
   return `${imports}
 

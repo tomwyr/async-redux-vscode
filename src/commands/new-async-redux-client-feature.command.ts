@@ -31,7 +31,7 @@ export const newAsyncReduxClientFeature = async (uri: Uri) => {
     targetDirectory = uri.fsPath
   }
 
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
   try {
     await generateFeatureCode(featureName, targetDirectory)
     window.showInformationMessage(
@@ -72,9 +72,9 @@ async function generateFeatureCode(
   featureName: string,
   targetDirectory: string,
 ) {
-  const generateExports = config.client.generateExports();
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
-  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`;
+  const generateExports = config.client.generateExports()
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
+  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`
 
   if (!existsSync(featureDirectoryPath)) {
     await createDirectory(featureDirectoryPath)
@@ -108,12 +108,12 @@ function createDirectory(targetDirectory: string): Promise<void> {
 }
 
 function createExportsTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
-  const targetFile = `${snakeCaseFeatureName}.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
+  const targetFile = `${snakeCaseFeatureName}.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
-  const widgetSuffix = config.client.widget.suffix();
-  const connectorSuffix = config.client.connector.suffix();
+  const widgetSuffix = config.client.widget.suffix()
+  const connectorSuffix = config.client.connector.suffix()
   const connectorIncludeWidgetSuffix =
     config.client.connector.includeWidgetSuffix()
 
@@ -128,7 +128,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
         featureName,
         widgetSuffix,
         connectorSuffix,
-        connectorIncludeWidgetSuffix
+        connectorIncludeWidgetSuffix,
       ),
       "utf8",
       (error) => {
@@ -143,10 +143,10 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createWidgetTemplate(featureName: string, targetDirectory: string) {
-  const pascalCaseFeatureName = changeCase.pascal(featureName);
-  const widgetSuffix = config.client.widget.suffix();
-  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`;
-  const snakeCaseWidgetName = changeCase.snake(widgetName);
+  const pascalCaseFeatureName = changeCase.pascal(featureName)
+  const widgetSuffix = config.client.widget.suffix()
+  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
+  const snakeCaseWidgetName = changeCase.snake(widgetName)
 
   const targetFile = `${snakeCaseWidgetName}.dart`
   const targetPath = `${targetDirectory}/${targetFile}`
@@ -167,31 +167,31 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createConnectorTemplate(featureName: string, targetDirectory: string) {
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
 
-  const widgetSuffix = config.client.widget.suffix();
-  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix).toLowerCase();
+  const widgetSuffix = config.client.widget.suffix()
+  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix).toLowerCase()
 
-  const connectorSuffix = config.client.connector.suffix();
+  const connectorSuffix = config.client.connector.suffix()
   const snakeCaseConnectorSuffix = changeCase
     .snake(connectorSuffix)
-    .toLowerCase();
+    .toLowerCase()
 
   const connectorIncludeWidgetSuffix =
-    config.client.connector.includeWidgetSuffix();
+    config.client.connector.includeWidgetSuffix()
 
-  const stateName = config.business.state.name();
-  const stateImportPath = config.business.state.importPath();
+  const stateName = config.business.state.name()
+  const stateImportPath = config.business.state.importPath()
 
-  let targetFile = snakeCaseFeatureName;
+  let targetFile = snakeCaseFeatureName
   if (connectorIncludeWidgetSuffix) {
-    targetFile += `_${snakeCaseWidgetSuffix}`;
+    targetFile += `_${snakeCaseWidgetSuffix}`
   }
-  targetFile += "_connector";
+  targetFile += "_connector"
   if (snakeCaseConnectorSuffix.length > 0) {
-    targetFile += `_${snakeCaseConnectorSuffix}`;
+    targetFile += `_${snakeCaseConnectorSuffix}`
   }
-  targetFile += ".dart";
+  targetFile += ".dart"
 
   const targetPath = `${targetDirectory}/${targetFile}`
 
@@ -226,9 +226,9 @@ async function createViewModelTemplate(
   featureName: string,
   targetDirectory: string,
 ) {
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
-  const targetFile = `${snakeCaseFeatureName}_view_model.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
+  const targetFile = `${snakeCaseFeatureName}_view_model.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
@@ -257,21 +257,20 @@ function createViewModelFactoryTemplate(
   featureName: string,
   targetDirectory: string,
 ) {
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
-  const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`;
-  const targetPath = `${targetDirectory}/${targetFile}`;
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
+  const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`
+  const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
   }
 
-  const widgetSuffix = config.client.widget.suffix();
-  const connectorSuffix = config.client.connector.suffix();
+  const widgetSuffix = config.client.widget.suffix()
+  const connectorSuffix = config.client.connector.suffix()
   const connectorIncludeWidgetSuffix =
-    config.client.connector.includeWidgetSuffix();
-  const viewModelFactoryBaseName = config.client.viewModelFactory.baseName();
-  const viewModelFactoryImportPath =
-    config.client.viewModelFactory.importPath();
+    config.client.connector.includeWidgetSuffix()
+  const viewModelFactoryBaseName = config.client.viewModelFactory.baseName()
+  const viewModelFactoryImportPath = config.client.viewModelFactory.importPath()
   const viewModelFactoryIncludeState =
     config.client.viewModelFactory.includeState()
   const stateName = config.business.state.name()

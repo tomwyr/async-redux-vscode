@@ -12,19 +12,19 @@ export function getViewModelFactoryTemplate(
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName);
+  const pascalCaseFeatureName = changeCase.pascal(featureName)
 
-  let connectorName = `${pascalCaseFeatureName}`;
+  let connectorName = `${pascalCaseFeatureName}`
   if (connectorIncludeWidgetSuffix) {
-    connectorName += widgetSuffix;
+    connectorName += widgetSuffix
   }
-  connectorName += `Connector${connectorSuffix}`;
+  connectorName += `Connector${connectorSuffix}`
 
-  const viewModelName = `${pascalCaseFeatureName}ViewModel`;
-  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`
+  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
 
-  const snakeCaseConnectorName = changeCase.snake(connectorName);
-  const snakeCaseViewModelName = changeCase.snake(viewModelName);
+  const snakeCaseConnectorName = changeCase.snake(connectorName)
+  const snakeCaseViewModelName = changeCase.snake(viewModelName)
 
   const viewModelFactoryTypeParameters = [
     ...(viewModelFactoryIncludeState ? [stateName] : []),
@@ -45,7 +45,7 @@ export function getViewModelFactoryTemplate(
 
   const featureImports = [snakeCaseConnectorName, snakeCaseViewModelName]
     .map((item) => `import '${item}.dart';`)
-    .join("\n");
+    .join("\n")
 
   return `${reduxImports}
 

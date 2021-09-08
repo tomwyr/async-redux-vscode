@@ -4,21 +4,21 @@ export function getClientExportsTemplate(
   featureName: string,
   widgetSuffix: string,
   connectorSuffix: string,
-  connectorIncludeWidgetSuffix: boolean
+  connectorIncludeWidgetSuffix: boolean,
 ): string {
-  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase();
-  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix);
-  const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix);
+  const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
+  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix)
+  const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix)
 
-  let connectorName = snakeCaseFeatureName;
+  let connectorName = snakeCaseFeatureName
   if (connectorIncludeWidgetSuffix) {
     connectorName += `_${snakeCaseWidgetSuffix}`
   }
-  connectorName += "_connector";
+  connectorName += "_connector"
   if (snakeCaseConnectorSuffix.length > 0) {
-    connectorName += `_${snakeCaseConnectorSuffix}`;
+    connectorName += `_${snakeCaseConnectorSuffix}`
   }
 
   return `export '${connectorName}.dart';
-`;
+`
 }

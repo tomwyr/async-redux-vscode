@@ -9,28 +9,28 @@ export function getConnectorTemplate(
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascal(featureName);
+  const pascalCaseFeatureName = changeCase.pascal(featureName)
 
-  let connectorName = pascalCaseFeatureName;
-  if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix;
-  connectorName += `Connector${connectorSuffix}`;
+  let connectorName = pascalCaseFeatureName
+  if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix
+  connectorName += `Connector${connectorSuffix}`
 
-  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`;
-  const viewModelName = `${pascalCaseFeatureName}ViewModel`;
-  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
+  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`
+  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
 
-  const snakeCaseWidgetName = changeCase.snake(widgetName);
-  const snakeCaseViewModelName = changeCase.snake(viewModelName);
-  const snakeCaseViewModelFactoryName = changeCase.snake(viewModelFactoryName);
+  const snakeCaseWidgetName = changeCase.snake(widgetName)
+  const snakeCaseViewModelName = changeCase.snake(viewModelName)
+  const snakeCaseViewModelFactoryName = changeCase.snake(viewModelFactoryName)
 
-  const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`;
+  const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`
 
-  let reduxImports = `${constants.asyncRedux.importStatement}`;
+  let reduxImports = `${constants.asyncRedux.importStatement}`
   if (
     stateImportPath.length > 0 &&
     stateImportPath != constants.asyncRedux.importPath
   ) {
-    reduxImports += `\nimport '${stateImportPath}';`;
+    reduxImports += `\nimport '${stateImportPath}';`
   }
 
   const featureImports = [
@@ -39,7 +39,7 @@ export function getConnectorTemplate(
     snakeCaseWidgetName,
   ]
     .map((item) => `import '${item}.dart';`)
-    .join("\n");
+    .join("\n")
 
   return `import 'package:flutter/material.dart';
 ${reduxImports}
