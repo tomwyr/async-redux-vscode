@@ -4,6 +4,7 @@ import * as constants from "../constants"
 export function getConnectorTemplate(
   featureName: string,
   widgetSuffix: string,
+  connectorSuffix: string,
   connectorIncludeWidgetSuffix: boolean,
   stateName: string,
   stateImportPath: string,
@@ -11,9 +12,9 @@ export function getConnectorTemplate(
   const pascalCaseFeatureName = changeCase.pascalCase(featureName.toLowerCase())
   const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
 
-  let connectorName = pascalCaseFeatureName
-  if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix
-  connectorName += "Connector"
+  let connectorName = pascalCaseFeatureName;
+  if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix;
+  connectorName += `Connector${connectorSuffix}`;
 
   const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
   const viewModelName = `${pascalCaseFeatureName}ViewModel`

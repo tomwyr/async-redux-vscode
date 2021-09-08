@@ -92,6 +92,11 @@
             "pattern": "^.+$",
             "patternErrorMessage": "Value cannot be empty"
           },
+          "async-redux.client.connector.suffix": {
+            "type": "string",
+            "default": "Widget",
+            "description": "Suffix appended to connector name."
+          },
           "async-redux.client.connector.includeWidgetSuffix": {
             "type": "boolean",
             "default": false,
