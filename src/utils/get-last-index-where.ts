@@ -1,15 +1,15 @@
 export function getLastIndexWhere<T>(
   array: T[],
-  predicate: (item: T) => boolean
+  predicate: (item: T) => boolean,
 ): number {
-  let lastNonEmptyIndex = -1;
+  let lastNonEmptyIndex = -1
 
   for (let index = array.length - 1; index >= 0; index--) {
     if (predicate(array[index])) {
-      lastNonEmptyIndex = index;
-      break;
+      lastNonEmptyIndex = index
+      break
     }
   }
 
-  return lastNonEmptyIndex;
+  return lastNonEmptyIndex
 }

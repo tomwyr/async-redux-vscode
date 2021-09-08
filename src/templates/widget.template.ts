@@ -5,5 +5,5 @@ class ${widgetName} extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container();
 }
-`;
+`
 }

@@ -1,1 +1,1 @@
-export * from "./snippet_completion_item_provider";
+export * from "./snippet_completion_item_provider"

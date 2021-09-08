@@ -2,7 +2,7 @@ name: pull-request
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v2
-      
+
       - name: "Setup Node"
         uses: actions/setup-node@v2
-        
+
       - name: "Install dependencies"
         run: |
           npm install
