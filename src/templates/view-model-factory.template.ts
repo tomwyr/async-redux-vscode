@@ -3,18 +3,30 @@ import * as constants from "../constants"
 
 export function getViewModelFactoryTemplate(
   featureName: string,
+  widgetSuffix: string,
+  connectorSuffix: string,
+  connectorIncludeWidgetSuffix: boolean,
   viewModelFactoryBaseName: string,
   viewModelFactoryImportPath: string,
   viewModelFactoryIncludeState: boolean,
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascalCase(featureName.toLowerCase())
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const pascalCaseFeatureName = changeCase.pascalCase(
+    featureName.toLowerCase()
+  );
 
-  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
-  const viewModelName = `${pascalCaseFeatureName}ViewModel`
-  const connectorName = `${pascalCaseFeatureName}Connector`
+  let connectorName = `${pascalCaseFeatureName}`;
+  if (connectorIncludeWidgetSuffix) {
+    connectorName += widgetSuffix;
+  }
+  connectorName += `Connector${connectorSuffix}`;
+
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`;
+  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
+
+  const snakeCaseConnectorName = changeCase.snakeCase(connectorName);
+  const snakeCaseViewModelName = changeCase.snakeCase(viewModelName);
 
   const viewModelFactoryTypeParameters = [
     ...(viewModelFactoryIncludeState ? [stateName] : []),
@@ -33,11 +45,13 @@ export function getViewModelFactoryTemplate(
     reduxImports += `\nimport '${stateImportPath}';`
   }
 
-  const viewModelFactoryImport = `import '${snakeCaseFeatureName}_view_model_factory.dart';`;
+  const featureImports = [snakeCaseConnectorName, snakeCaseViewModelName]
+    .map((item) => `import '${item}.dart';`)
+    .join("\n");
 
   return `${reduxImports}
 
-${viewModelFactoryImport}
+${featureImports}
   
 class ${viewModelFactoryName} extends ${viewModelFactoryBaseName}<${viewModelFactoryTypeParameters}> {
   @override

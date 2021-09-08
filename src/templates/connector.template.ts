@@ -9,17 +9,24 @@ export function getConnectorTemplate(
   stateName: string,
   stateImportPath: string,
 ): string {
-  const pascalCaseFeatureName = changeCase.pascalCase(featureName.toLowerCase())
-  const snakeCaseFeatureName = changeCase.snakeCase(featureName.toLowerCase())
+  const pascalCaseFeatureName = changeCase.pascalCase(
+    featureName.toLowerCase()
+  );
 
   let connectorName = pascalCaseFeatureName;
   if (connectorIncludeWidgetSuffix) connectorName += widgetSuffix;
   connectorName += `Connector${connectorSuffix}`;
 
-  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
-  const viewModelName = `${pascalCaseFeatureName}ViewModel`
-  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`
-  const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`
+  const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`;
+  const viewModelName = `${pascalCaseFeatureName}ViewModel`;
+  const viewModelFactoryName = `${pascalCaseFeatureName}ViewModelFactory`;
+
+  const snakeCaseWidgetName = changeCase.snakeCase(widgetName);
+  const snakeCaseViewModelName = changeCase.snakeCase(viewModelName);
+  const snakeCaseViewModelFactoryName =
+    changeCase.snakeCase(viewModelFactoryName);
+
+  const storeConnectorTypeParameters = `${stateName}, ${viewModelName}`;
 
   let reduxImports = `${constants.asyncRedux.importStatement}`;
   if (
@@ -29,8 +36,12 @@ export function getConnectorTemplate(
     reduxImports += `\nimport '${stateImportPath}';`;
   }
 
-  const featureImports = ["view_model", "view_model_factory", "widget"]
-    .map((item) => `import '${snakeCaseFeatureName}_${item}';`)
+  const featureImports = [
+    snakeCaseViewModelName,
+    snakeCaseViewModelFactoryName,
+    snakeCaseWidgetName,
+  ]
+    .map((item) => `import '${item}.dart';`)
     .join("\n");
 
   return `import 'package:flutter/material.dart';
