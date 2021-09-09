@@ -11,7 +11,9 @@ export function getViewModelFactoryTemplate(
   viewModelFactoryIncludeState: boolean,
   stateName: string,
   stateImportPath: string,
+  useFullFeatureNames: boolean,
 ): string {
+  const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
 
   let connectorName = `${pascalCaseFeatureName}`
@@ -43,7 +45,12 @@ export function getViewModelFactoryTemplate(
     reduxImports += `\nimport '${stateImportPath}';`
   }
 
+  const featurePrefixLength = `${snakeCaseFeatureName}_`.length
+
   const featureImports = [snakeCaseConnectorName, snakeCaseViewModelName]
+    .map((item) =>
+      useFullFeatureNames ? item : item.slice(featurePrefixLength),
+    )
     .map((item) => `import '${item}.dart';`)
     .join("\n")
 

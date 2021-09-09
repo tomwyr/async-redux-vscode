@@ -116,6 +116,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
   const connectorSuffix = config.client.connector.suffix()
   const connectorIncludeWidgetSuffix =
     config.client.connector.includeWidgetSuffix()
+  const useFullFeatureNames = config.general.useFullFeatureNames()
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
@@ -129,6 +130,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
         widgetSuffix,
         connectorSuffix,
         connectorIncludeWidgetSuffix,
+        useFullFeatureNames,
       ),
       "utf8",
       (error) => {
@@ -143,15 +145,25 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
 }
 
 function createWidgetTemplate(featureName: string, targetDirectory: string) {
+  const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
   const widgetSuffix = config.client.widget.suffix()
+  const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix)
   const widgetName = `${pascalCaseFeatureName}${widgetSuffix}`
-  const snakeCaseWidgetName = changeCase.snake(widgetName)
 
   const viewModelName = `${pascalCaseFeatureName}ViewModel`
   const injectViewModel = config.client.injectViewModel()
 
-  const targetFile = `${snakeCaseWidgetName}.dart`
+  const useFullFeatureNames = config.general.useFullFeatureNames()
+
+  let viewModelFileName = ""
+  if (useFullFeatureNames) viewModelFileName += `${snakeCaseFeatureName}_`
+  viewModelFileName += "view_model"
+
+  let targetFile = ""
+  if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
+  targetFile += `${snakeCaseWidgetSuffix}.dart`
+
   const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
@@ -161,7 +173,12 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getWidgetTemplate(widgetName, viewModelName, injectViewModel),
+      getWidgetTemplate(
+        widgetName,
+        viewModelName,
+        viewModelFileName,
+        injectViewModel,
+      ),
       "utf8",
       (error) => {
         if (error) {
@@ -193,11 +210,14 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   const stateName = config.business.state.name()
   const stateImportPath = config.business.state.importPath()
 
-  let targetFile = snakeCaseFeatureName
+  const useFullFeatureNames = config.general.useFullFeatureNames()
+
+  let targetFile = ""
+  if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
   if (connectorIncludeWidgetSuffix) {
-    targetFile += `_${snakeCaseWidgetSuffix}`
+    targetFile += `${snakeCaseWidgetSuffix}_`
   }
-  targetFile += "_connector"
+  targetFile += "connector"
   if (snakeCaseConnectorSuffix.length > 0) {
     targetFile += `_${snakeCaseConnectorSuffix}`
   }
@@ -220,6 +240,7 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
         connectorIncludeWidgetSuffix,
         stateName,
         stateImportPath,
+        useFullFeatureNames,
       ),
       "utf8",
       (error) => {
@@ -237,8 +258,14 @@ async function createViewModelTemplate(
   featureName: string,
   targetDirectory: string,
 ) {
+  const useFullFeatureNames = config.general.useFullFeatureNames()
+
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
-  const targetFile = `${snakeCaseFeatureName}_view_model.dart`
+
+  let targetFile = ""
+  if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
+  targetFile += "view_model.dart"
+
   const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
@@ -268,8 +295,14 @@ function createViewModelFactoryTemplate(
   featureName: string,
   targetDirectory: string,
 ) {
+  const useFullFeatureNames = config.general.useFullFeatureNames()
+
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
-  const targetFile = `${snakeCaseFeatureName}_view_model_factory.dart`
+
+  let targetFile = ""
+  if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
+  targetFile += "view_model_factory.dart"
+
   const targetPath = `${targetDirectory}/${targetFile}`
 
   if (existsSync(targetPath)) {
@@ -300,6 +333,7 @@ function createViewModelFactoryTemplate(
         viewModelFactoryIncludeState,
         stateName,
         stateImportPath,
+        useFullFeatureNames,
       ),
       "utf8",
       (error) => {

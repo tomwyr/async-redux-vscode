@@ -9,7 +9,9 @@ export function getConnectorTemplate(
   connectorIncludeWidgetSuffix: boolean,
   stateName: string,
   stateImportPath: string,
+  useFullFeatureNames: boolean,
 ): string {
+  const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
 
   let connectorName = pascalCaseFeatureName
@@ -36,11 +38,16 @@ export function getConnectorTemplate(
     reduxImports += `\nimport '${stateImportPath}';`
   }
 
+  const featurePrefixLength = `${snakeCaseFeatureName}_`.length
+
   const featureImports = [
     snakeCaseViewModelName,
     snakeCaseViewModelFactoryName,
     snakeCaseWidgetName,
   ]
+    .map((item) =>
+      useFullFeatureNames ? item : item.slice(featurePrefixLength),
+    )
     .map((item) => `import '${item}.dart';`)
     .join("\n")
 

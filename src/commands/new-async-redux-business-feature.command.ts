@@ -71,6 +71,7 @@ async function generateFeatureCode(
   targetDirectory: string,
 ) {
   const generateExports = config.business.generateExports()
+  const useFullFeatureNames = config.general.useFullFeatureNames()
 
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
   const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`
@@ -88,12 +89,20 @@ async function generateFeatureCode(
   }
 
   const generatePromises: Promise<void>[] = [
-    createStateTemplate(featureName, featureModelsDirectoryPath),
+    createStateTemplate(
+      featureName,
+      featureModelsDirectoryPath,
+      useFullFeatureNames,
+    ),
   ]
 
   if (generateExports) {
     generatePromises.push(
-      createExportsTemplate(featureName, featureDirectoryPath),
+      createExportsTemplate(
+        featureName,
+        featureDirectoryPath,
+        useFullFeatureNames,
+      ),
     )
   }
 
@@ -111,12 +120,21 @@ function createDirectory(targetDirectory: string): Promise<void> {
   })
 }
 
-function createStateTemplate(featureName: string, targetDirectory: string) {
+function createStateTemplate(
+  featureName: string,
+  targetDirectory: string,
+  useFullFeatureNames: boolean,
+) {
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
-  const targetFile = `${snakeCaseFeatureName}_state.dart`
+
+  let targetFile = ""
+  if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
+  targetFile += "state.dart"
+
   const targetPath = `${targetDirectory}/${targetFile}`
 
   const generateFreezed = config.business.state.generateFreezed()
+
   const getStateTemplate = generateFreezed
     ? getFreezedStateTemplate
     : getDefaultStateTemplate
@@ -126,17 +144,26 @@ function createStateTemplate(featureName: string, targetDirectory: string) {
   }
 
   return new Promise<void>(async (resolve, reject) => {
-    writeFile(targetPath, getStateTemplate(featureName), "utf8", (error) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve()
-    })
+    writeFile(
+      targetPath,
+      getStateTemplate(featureName, useFullFeatureNames),
+      "utf8",
+      (error) => {
+        if (error) {
+          reject(error)
+          return
+        }
+        resolve()
+      },
+    )
   })
 }
 
-function createExportsTemplate(featureName: string, targetDirectory: string) {
+function createExportsTemplate(
+  featureName: string,
+  targetDirectory: string,
+  useFullFeatureNames: boolean,
+) {
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
   const targetFile = `${snakeCaseFeatureName}.dart`
   const targetPath = `${targetDirectory}/${targetFile}`
@@ -148,7 +175,7 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getBusinessExportsTemplate(featureName),
+      getBusinessExportsTemplate(featureName, useFullFeatureNames),
       "utf8",
       (error) => {
         if (error) {

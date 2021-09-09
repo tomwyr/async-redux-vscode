@@ -5,16 +5,18 @@ export function getClientExportsTemplate(
   widgetSuffix: string,
   connectorSuffix: string,
   connectorIncludeWidgetSuffix: boolean,
+  useFullFeatureNames: boolean,
 ): string {
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
   const snakeCaseWidgetSuffix = changeCase.snake(widgetSuffix)
   const snakeCaseConnectorSuffix = changeCase.snake(connectorSuffix)
 
-  let connectorName = snakeCaseFeatureName
+  let connectorName = ""
+  if (useFullFeatureNames) connectorName += `${snakeCaseFeatureName}_`
   if (connectorIncludeWidgetSuffix) {
-    connectorName += `_${snakeCaseWidgetSuffix}`
+    connectorName += `${snakeCaseWidgetSuffix}_`
   }
-  connectorName += "_connector"
+  connectorName += "connector"
   if (snakeCaseConnectorSuffix.length > 0) {
     connectorName += `_${snakeCaseConnectorSuffix}`
   }

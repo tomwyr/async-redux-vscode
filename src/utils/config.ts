@@ -4,6 +4,7 @@ import * as constants from "../constants"
 export const config = {
   general: {
     enableSnippets: getEnableSnippets,
+    useFullFeatureNames: getUseFullFeatureNames,
   },
   business: {
     generateExports: getBusinessGenerateExports,
@@ -43,6 +44,10 @@ export const config = {
 
 function getEnableSnippets(): boolean {
   return getConfigValue("general.enableSnippets") ?? true
+}
+
+function getUseFullFeatureNames(): boolean {
+  return getConfigValue("general.useFullFeatureNames") ?? true
 }
 
 function getBusinessGenerateExports(): boolean {

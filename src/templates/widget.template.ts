@@ -1,19 +1,16 @@
-import * as changeCase from "change-case"
-
 export function getWidgetTemplate(
   widgetName: string,
   viewModelName: string,
+  viewModelFileName: string,
   injectViewModel: boolean,
 ): string {
-  const snakeCaseViewModelName = changeCase.snake(viewModelName)
-
   const contructorAndFields = injectViewModel
     ? getContructorWithViewModel(widgetName, viewModelName)
     : getDefaultConstructor(widgetName)
 
   let imports = "import 'package:flutter/material.dart';"
   if (injectViewModel) {
-    imports += `\n\nimport '${snakeCaseViewModelName}.dart';`
+    imports += `\n\nimport '${viewModelFileName}.dart';`
   }
 
   return `${imports}
