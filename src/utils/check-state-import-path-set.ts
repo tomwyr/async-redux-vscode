@@ -1,9 +1,5 @@
 import { window } from "vscode"
-import {
-  config,
-  selectStateImportPathErrors,
-  showStatePathMissingInfo,
-} from "."
+import { config, errors, showStatePathMissingInfo } from "."
 
 export async function checkStateImportPathSet() {
   const stateImportPath = config.business.state.importPath()
@@ -16,7 +12,7 @@ export async function checkStateImportPathSet() {
         `Successfully updated state import path to: ${stateImportPath}`,
       )
     } catch (error) {
-      if (error != selectStateImportPathErrors.pathNotSelected) {
+      if (error != errors.pathNotSelected) {
         const message =
           error instanceof Error ? error.message : JSON.stringify(error)
 

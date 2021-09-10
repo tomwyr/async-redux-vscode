@@ -1,8 +1,11 @@
 import * as changeCase from "change-case"
+import { join } from "path"
 import * as constants from "../constants"
+import { convertToAbsoluteImportPath } from "../utils"
 
-export function getViewModelFactoryTemplate(
+export async function getViewModelFactoryTemplate(
   featureName: string,
+  targetDirectory: string,
   widgetSuffix: string,
   connectorSuffix: string,
   connectorIncludeWidgetSuffix: boolean,
@@ -12,7 +15,8 @@ export function getViewModelFactoryTemplate(
   stateName: string,
   stateImportPath: string,
   useFullFeatureNames: boolean,
-): string {
+  useAbsoluteImports: boolean,
+): Promise<string> {
   const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
 
@@ -37,22 +41,38 @@ export function getViewModelFactoryTemplate(
   if (viewModelFactoryImportPath != constants.asyncRedux.importPath) {
     reduxImports += `\nimport '${viewModelFactoryImportPath}';`
   }
-  if (
+
+  const includeCustomStateImport =
     viewModelFactoryIncludeState &&
     stateImportPath.length > 0 &&
     stateImportPath != constants.asyncRedux.importPath
-  ) {
+
+  if (includeCustomStateImport) {
     reduxImports += `\nimport '${stateImportPath}';`
   }
 
   const featurePrefixLength = `${snakeCaseFeatureName}_`.length
 
-  const featureImports = [snakeCaseConnectorName, snakeCaseViewModelName]
-    .map((item) =>
-      useFullFeatureNames ? item : item.slice(featurePrefixLength),
-    )
-    .map((item) => `import '${item}.dart';`)
-    .join("\n")
+  const importPathPromises = [
+    snakeCaseConnectorName,
+    snakeCaseViewModelName,
+  ].map(async (item) => {
+    let importPath = `${item}.dart`
+
+    if (!useFullFeatureNames) {
+      importPath = importPath.slice(featurePrefixLength)
+    }
+
+    if (useAbsoluteImports) {
+      const absoluteFilePath = join(targetDirectory, importPath)
+      importPath = await convertToAbsoluteImportPath(absoluteFilePath)
+    }
+
+    return `import '${importPath}';`
+  })
+
+  const importPaths = await Promise.all(importPathPromises)
+  const featureImports = importPaths.join("\n")
 
   return `${reduxImports}
 

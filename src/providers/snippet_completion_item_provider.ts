@@ -35,8 +35,6 @@ export class SnippetCompletionItemProvider implements CompletionItemProvider {
     _token: CancellationToken,
     _context: CompletionContext,
   ): ProviderResult<CompletionItem[]> {
-    const general = config.general
-    console.log(general)
     if (!config.general.enableSnippets()) return
 
     return this.snippetItems

@@ -1,7 +1,7 @@
 import * as changeCase from "change-case"
 import { existsSync, lstatSync, writeFile } from "fs"
 import * as _ from "lodash"
-import { join } from "path"
+import { join, sep } from "path"
 import { InputBoxOptions, OpenDialogOptions, Uri, window } from "vscode"
 import * as constants from "../constants"
 import { getActionTemplate } from "../templates"
@@ -159,8 +159,8 @@ async function addActionToFeatureExports(
   actionName: string,
   actionsDirectoryPath: string,
 ) {
-  const featurePathItems = actionsDirectoryPath.split("/").slice(0, -1)
-  const featurePath = featurePathItems.join("/")
+  const featurePathItems = actionsDirectoryPath.split(sep).slice(0, -1)
+  const featurePath = join(...featurePathItems)
   const featureName = featurePathItems[featurePathItems.length - 1]
   const featureFileName = `${featureName}.dart`
   const featureExportsPath = join(featurePath, featureFileName)

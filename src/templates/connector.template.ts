@@ -1,8 +1,11 @@
 import * as changeCase from "change-case"
+import { join } from "path"
 import * as constants from "../constants"
+import { convertToAbsoluteImportPath } from "../utils"
 
-export function getConnectorTemplate(
+export async function getConnectorTemplate(
   featureName: string,
+  targetDirectory: string,
   widgetSuffix: string,
   injectViewModel: boolean,
   connectorSuffix: string,
@@ -10,7 +13,8 @@ export function getConnectorTemplate(
   stateName: string,
   stateImportPath: string,
   useFullFeatureNames: boolean,
-): string {
+  useAbsoluteImports: boolean,
+): Promise<string> {
   const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
 
@@ -40,16 +44,27 @@ export function getConnectorTemplate(
 
   const featurePrefixLength = `${snakeCaseFeatureName}_`.length
 
-  const featureImports = [
+  const importPathPromises = [
     snakeCaseViewModelName,
     snakeCaseViewModelFactoryName,
     snakeCaseWidgetName,
-  ]
-    .map((item) =>
-      useFullFeatureNames ? item : item.slice(featurePrefixLength),
-    )
-    .map((item) => `import '${item}.dart';`)
-    .join("\n")
+  ].map(async (item) => {
+    let importPath = `${item}.dart`
+
+    if (!useFullFeatureNames) {
+      importPath = importPath.slice(featurePrefixLength)
+    }
+
+    if (useAbsoluteImports) {
+      const absoluteFilePath = join(targetDirectory, importPath)
+      importPath = await convertToAbsoluteImportPath(absoluteFilePath)
+    }
+
+    return `import '${importPath}';`
+  })
+
+  const importPaths = await Promise.all(importPathPromises)
+  const featureImports = importPaths.join("\n")
 
   return `import 'package:flutter/material.dart';
 ${reduxImports}

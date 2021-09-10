@@ -5,6 +5,7 @@ export const config = {
   general: {
     enableSnippets: getEnableSnippets,
     useFullFeatureNames: getUseFullFeatureNames,
+    useAbsoluteImports: getUseAbsoluteImports,
   },
   business: {
     generateExports: getBusinessGenerateExports,
@@ -56,6 +57,10 @@ function getEnableSnippets(): boolean {
 
 function getUseFullFeatureNames(): boolean {
   return getConfigValue("general.useFullFeatureNames") ?? true
+}
+
+function getUseAbsoluteImports(): boolean {
+  return getConfigValue("general.useAbsoluteImports") ?? false
 }
 
 function getBusinessGenerateExports(): boolean {

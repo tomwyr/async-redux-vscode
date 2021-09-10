@@ -1,9 +1,8 @@
 import * as _ from "lodash"
 import * as yaml from "js-yaml"
 import { workspace, Uri } from "vscode"
-import * as path from "path"
-import { getWorkspacePath } from "."
 import { existsSync } from "fs"
+import { getPubspecPath } from "."
 
 export async function getProjectName(): Promise<string | undefined> {
   const pubspec = await getPubspec()
@@ -27,12 +26,4 @@ async function getPubspec(): Promise<Record<string, any> | undefined> {
   try {
     return yaml.load(pubspecBytes.toString()) as Record<string, any>
   } catch (_) {}
-}
-
-function getPubspecPath(): string | undefined {
-  const workspacePath = getWorkspacePath()
-
-  if (!workspacePath) return
-
-  return path.join(workspacePath, "pubspec.yaml")
 }

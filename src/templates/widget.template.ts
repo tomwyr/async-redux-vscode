@@ -1,7 +1,7 @@
 export function getWidgetTemplate(
   widgetName: string,
   viewModelName: string,
-  viewModelFileName: string,
+  viewModelImportPath: string,
   injectViewModel: boolean,
 ): string {
   const contructorAndFields = injectViewModel
@@ -10,7 +10,7 @@ export function getWidgetTemplate(
 
   let imports = "import 'package:flutter/material.dart';"
   if (injectViewModel) {
-    imports += `\n\nimport '${viewModelFileName}.dart';`
+    imports += `\n\nimport '${viewModelImportPath}';`
   }
 
   return `${imports}
@@ -29,7 +29,7 @@ function getDefaultConstructor(widgetName: string) {
 }
 
 function getContructorWithViewModel(widgetName: string, viewModelName: string) {
-  return `${widgetName}({
+  return `const ${widgetName}({
     Key? key,
     required this.viewModel,
   }) : super(key: key);

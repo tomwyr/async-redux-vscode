@@ -11,8 +11,12 @@ import {
   getViewModelTemplate,
   getViewModelFactoryTemplate,
 } from "../templates"
-import { checkStateImportPathSet, config } from "../utils"
-import { join } from "lodash"
+import {
+  checkStateImportPathSet,
+  config,
+  convertToAbsoluteImportPath,
+} from "../utils"
+import { join } from "path"
 
 export const newAsyncReduxClientFeature = async (uri: Uri) => {
   const featureName = await promptForFeatureName()
@@ -147,7 +151,10 @@ function createExportsTemplate(featureName: string, targetDirectory: string) {
   })
 }
 
-function createWidgetTemplate(featureName: string, targetDirectory: string) {
+async function createWidgetTemplate(
+  featureName: string,
+  targetDirectory: string,
+) {
   const snakeCaseFeatureName = changeCase.snake(featureName)
   const pascalCaseFeatureName = changeCase.pascal(featureName)
   const widgetSuffix = config.client.widget.suffix()
@@ -159,15 +166,23 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
 
   const useFullFeatureNames = config.general.useFullFeatureNames()
 
-  let viewModelFileName = ""
-  if (useFullFeatureNames) viewModelFileName += `${snakeCaseFeatureName}_`
-  viewModelFileName += "view_model"
-
   let targetFile = ""
   if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
   targetFile += `${snakeCaseWidgetSuffix}.dart`
 
   const targetPath = join(targetDirectory, targetFile)
+
+  const useAbsoluteImports = config.general.useAbsoluteImports()
+
+  let viewModelFileName = ""
+  if (useFullFeatureNames) viewModelFileName += `${snakeCaseFeatureName}_`
+  viewModelFileName += "view_model.dart"
+
+  const viewModelFilePath = join(targetDirectory, viewModelFileName)
+
+  const viewModelImportPath = useAbsoluteImports
+    ? await convertToAbsoluteImportPath(viewModelFilePath)
+    : viewModelFileName
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
@@ -179,7 +194,7 @@ function createWidgetTemplate(featureName: string, targetDirectory: string) {
       getWidgetTemplate(
         widgetName,
         viewModelName,
-        viewModelFileName,
+        viewModelImportPath,
         injectViewModel,
       ),
       "utf8",
@@ -214,6 +229,7 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   const stateImportPath = config.business.state.importPath()
 
   const useFullFeatureNames = config.general.useFullFeatureNames()
+  const useAbsoluteImports = config.general.useAbsoluteImports()
 
   let targetFile = ""
   if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
@@ -235,8 +251,9 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getConnectorTemplate(
+      await getConnectorTemplate(
         featureName,
+        targetDirectory,
         widgetSuffix,
         injectViewModel,
         connectorSuffix,
@@ -244,6 +261,7 @@ function createConnectorTemplate(featureName: string, targetDirectory: string) {
         stateName,
         stateImportPath,
         useFullFeatureNames,
+        useAbsoluteImports,
       ),
       "utf8",
       (error) => {
@@ -322,12 +340,14 @@ function createViewModelFactoryTemplate(
     config.client.viewModelFactory.includeState()
   const stateName = config.business.state.name()
   const stateImportPath = config.business.state.importPath()
+  const useAbsoluteImports = config.general.useAbsoluteImports()
 
   return new Promise<void>(async (resolve, reject) => {
     writeFile(
       targetPath,
-      getViewModelFactoryTemplate(
+      await getViewModelFactoryTemplate(
         featureName,
+        targetDirectory,
         widgetSuffix,
         connectorSuffix,
         connectorIncludeWidgetSuffix,
@@ -337,6 +357,7 @@ function createViewModelFactoryTemplate(
         stateName,
         stateImportPath,
         useFullFeatureNames,
+        useAbsoluteImports,
       ),
       "utf8",
       (error) => {
