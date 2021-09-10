@@ -10,6 +10,7 @@ import {
   getFreezedStateTemplate,
 } from "../templates"
 import { config } from "../utils"
+import { join } from "path"
 
 export const newAsyncReduxBusinessFeature = async (uri: Uri) => {
   const featureName = await promptForFeatureName()
@@ -74,9 +75,9 @@ async function generateFeatureCode(
   const useFullFeatureNames = config.general.useFullFeatureNames()
 
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
-  const featureDirectoryPath = `${targetDirectory}/${snakeCaseFeatureName}`
-  const featureActionsDirectoryPath = `${featureDirectoryPath}/actions`
-  const featureModelsDirectoryPath = `${featureDirectoryPath}/models`
+  const featureDirectoryPath = join(targetDirectory, snakeCaseFeatureName)
+  const featureActionsDirectoryPath = join(featureDirectoryPath, "actions")
+  const featureModelsDirectoryPath = join(featureDirectoryPath, "models")
 
   if (!existsSync(featureDirectoryPath)) {
     await createDirectory(featureDirectoryPath)
@@ -131,7 +132,7 @@ function createStateTemplate(
   if (useFullFeatureNames) targetFile += `${snakeCaseFeatureName}_`
   targetFile += "state.dart"
 
-  const targetPath = `${targetDirectory}/${targetFile}`
+  const targetPath = join(targetDirectory, targetFile)
 
   const generateFreezed = config.business.state.generateFreezed()
 
@@ -166,7 +167,7 @@ function createExportsTemplate(
 ) {
   const snakeCaseFeatureName = changeCase.snake(featureName).toLowerCase()
   const targetFile = `${snakeCaseFeatureName}.dart`
-  const targetPath = `${targetDirectory}/${targetFile}`
+  const targetPath = join(targetDirectory, targetFile)
 
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
