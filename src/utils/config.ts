@@ -1,4 +1,4 @@
-import { workspace } from "vscode"
+import { commands, ConfigurationTarget, workspace } from "vscode"
 import * as constants from "../constants"
 
 export const config = {
@@ -40,6 +40,14 @@ export const config = {
       includeState: getViewModelFactoryIncludeState,
     },
   },
+}
+
+export const changeConfig = {
+  stateImportPath: setStateImportPath,
+}
+
+export const openConfig = {
+  stateImportPath: openStateImportPath,
 }
 
 function getEnableSnippets(): boolean {
@@ -149,4 +157,26 @@ function getConfigValue<T>(configItemName: string): T | undefined {
   return workspace
     .getConfiguration(constants.extension.name)
     .get(configItemName)
+}
+
+async function setStateImportPath(importPath: string) {
+  await workspace
+    .getConfiguration(constants.extension.name)
+    .update(
+      "business.state.importPath",
+      importPath,
+      ConfigurationTarget.Workspace,
+    )
+}
+
+async function openStateImportPath() {
+  const settingPath = `${constants.extension.name}.business.state.importPath`
+
+  await commands.executeCommand(
+    // TODO switch to workspace settings once it gets supported by vscode
+    // "workbench.action.openWorkspaceSettings",
+    // https://github.com/microsoft/vscode/issues/90086
+    "workbench.action.openSettings",
+    settingPath,
+  )
 }

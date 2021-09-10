@@ -11,7 +11,7 @@ import {
   getViewModelTemplate,
   getViewModelFactoryTemplate,
 } from "../templates"
-import { config } from "../utils"
+import { checkStateImportPathSet, config } from "../utils"
 
 export const newAsyncReduxClientFeature = async (uri: Uri) => {
   const featureName = await promptForFeatureName()
@@ -43,6 +43,8 @@ export const newAsyncReduxClientFeature = async (uri: Uri) => {
         ${error instanceof Error ? error.message : JSON.stringify(error)}`,
     )
   }
+
+  await checkStateImportPathSet()
 }
 
 function promptForFeatureName(): Thenable<string | undefined> {

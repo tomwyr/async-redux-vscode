@@ -7,6 +7,7 @@ import { getActionTemplate } from "../templates"
 import {
   ActionType,
   asyncPickItem,
+  checkStateImportPathSet,
   config,
   getLastIndexWhere,
   readFileData,
@@ -51,6 +52,8 @@ export const newAsyncReduxAction = async (uri: Uri) => {
         ${error instanceof Error ? error.message : JSON.stringify(error)}`,
     )
   }
+
+  await checkStateImportPathSet()
 }
 
 function promptForActionName(): Thenable<string | undefined> {
@@ -124,9 +127,6 @@ async function createActionTemplate(
   let actionBaseName = config.business.action.baseName()
   if (actionIncludeState) actionBaseName += `<${stateName}>`
 
-  const actionImport = `import '${actionImportPath}';`
-  const stateImport = `import '${stateImportPath}';`
-
   if (existsSync(targetPath)) {
     throw Error(`${targetFile} already exists`)
   }
@@ -137,10 +137,10 @@ async function createActionTemplate(
       getActionTemplate(
         actionName,
         actionBaseName,
-        actionImport,
+        actionImportPath,
         actionType,
         stateName,
-        stateImport,
+        stateImportPath,
       ),
       "utf8",
       (error) => {

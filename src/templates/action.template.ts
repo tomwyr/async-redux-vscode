@@ -1,20 +1,24 @@
 import * as changeCase from "change-case"
-import { ActionType } from "../utils"
+import { ActionType, notEmpty } from "../utils"
 import { distinct } from "../utils"
 
 export function getActionTemplate(
   actionName: string,
   actionBaseName: string,
-  actionImport: string,
+  actionImportPath: string,
   actionType: ActionType,
   stateName: string,
-  stateImport: string,
+  stateImportPath: string,
 ): string {
   const pascalCaseActionName = changeCase.pascal(actionName)
   const reduxActionName = `${pascalCaseActionName}Action`
   const actionReduce = getActionTypeReduce(actionType, stateName)
 
-  const imports = [actionImport, stateImport].filter(distinct).join("\n")
+  const imports = [actionImportPath, stateImportPath]
+    .filter(notEmpty)
+    .filter(distinct)
+    .map((item) => `import '${item}';`)
+    .join("\n")
 
   return `${imports}
 
