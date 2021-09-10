@@ -155,16 +155,19 @@
     ],
     "commands": [
       {
-        "command": "extension.new-async-redux-action",
-        "title": "Async Redux: New Action"
+        "command": "async-redux.new-async-redux-action",
+        "title": "New Action",
+        "category": "Async Redux"
       },
       {
-        "command": "extension.new-async-redux-business-feature",
-        "title": "Async Redux: New Business Feature"
+        "command": "async-redux.new-async-redux-business-feature",
+        "title": "New Business Feature",
+        "category": "Async Redux"
       },
       {
-        "command": "extension.new-async-redux-client-feature",
-        "title": "Async Redux: New Client Feature"
+        "command": "async-redux.new-async-redux-client-feature",
+        "title": "New Client Feature",
+        "category": "Async Redux"
       }
     ],
     "submenus": [
@@ -177,23 +180,23 @@
       "explorer/context": [
         {
           "submenu": "async-redux",
-          "group": "asyncReduxGroup@1"
+          "group": "async-redux"
         }
       ],
       "async-redux": [
         {
-          "command": "extension.new-async-redux-action",
-          "group": "asyncReduxGroup@1",
+          "command": "async-redux.new-async-redux-action",
+          "group": "async-redux",
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "extension.new-async-redux-business-feature",
-          "group": "asyncReduxGroup@1",
+          "command": "async-redux.new-async-redux-business-feature",
+          "group": "async-redux",
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "extension.new-async-redux-client-feature",
-          "group": "asyncReduxGroup@1",
+          "command": "async-redux.new-async-redux-client-feature",
+          "group": "async-redux",
           "when": "explorerResourceIsFolder"
         }
       ]

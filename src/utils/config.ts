@@ -155,13 +155,13 @@ function getConnectorIncludeWidgetSuffix(): boolean {
 
 function getConfigValue<T>(configItemName: string): T | undefined {
   return workspace
-    .getConfiguration(constants.extension.name)
+    .getConfiguration(constants.extension.configId)
     .get(configItemName)
 }
 
 async function setStateImportPath(importPath: string) {
   await workspace
-    .getConfiguration(constants.extension.name)
+    .getConfiguration(constants.extension.configId)
     .update(
       "business.state.importPath",
       importPath,
@@ -170,7 +170,7 @@ async function setStateImportPath(importPath: string) {
 }
 
 async function openStateImportPath() {
-  const settingPath = `${constants.extension.name}.business.state.importPath`
+  const settingPath = `${constants.extension.configId}.business.state.importPath`
 
   await commands.executeCommand(
     // TODO switch to workspace settings once it gets supported by vscode
