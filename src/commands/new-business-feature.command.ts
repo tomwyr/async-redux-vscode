@@ -55,7 +55,7 @@ function promptForFeatureName(): Thenable<string | undefined> {
 async function promptForTargetDirectory(): Promise<string | undefined> {
   const options: OpenDialogOptions = {
     canSelectMany: false,
-    openLabel: "Select a folder to create the feature in",
+    openLabel: "Select new feature folder",
     canSelectFolders: true,
   }
 

@@ -75,7 +75,7 @@ async function promptForActionType(): Promise<ActionType | undefined> {
 async function promptForTargetDirectory(): Promise<string | undefined> {
   const options: OpenDialogOptions = {
     canSelectMany: false,
-    openLabel: "Select a folder to create the action in",
+    openLabel: "Select new action folder",
     canSelectFolders: true,
   }
 

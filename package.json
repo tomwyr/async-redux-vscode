@@ -155,17 +155,17 @@
     ],
     "commands": [
       {
-        "command": "async-redux.new-async-redux-action",
+        "command": "async-redux.new-action",
         "title": "New Action",
         "category": "Async Redux"
       },
       {
-        "command": "async-redux.new-async-redux-business-feature",
+        "command": "async-redux.new-business-feature",
         "title": "New Business Feature",
         "category": "Async Redux"
       },
       {
-        "command": "async-redux.new-async-redux-client-feature",
+        "command": "async-redux.new-client-feature",
         "title": "New Client Feature",
         "category": "Async Redux"
       }
@@ -185,17 +185,17 @@
       ],
       "async-redux": [
         {
-          "command": "async-redux.new-async-redux-action",
+          "command": "async-redux.new-action",
           "group": "async-redux",
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "async-redux.new-async-redux-business-feature",
+          "command": "async-redux.new-business-feature",
           "group": "async-redux",
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "async-redux.new-async-redux-client-feature",
+          "command": "async-redux.new-client-feature",
           "group": "async-redux",
           "when": "explorerResourceIsFolder"
         }

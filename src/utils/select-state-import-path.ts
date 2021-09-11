@@ -47,6 +47,7 @@ async function showStateFilePathDialog(
 ): Promise<string | undefined> {
   const selectedUris = await window.showOpenDialog({
     canSelectMany: false,
+    openLabel: "Select state file",
     defaultUri: Uri.parse(projectLibPath),
     filters: { Dart: ["dart"] },
   })
